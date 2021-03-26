@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17356831, g: 0.21698575, b: 0.29908836, a: 1}
+  m_IndirectSpecularColor: {r: 0.17511739, g: 0.21907966, b: 0.30138156, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: 35f5b41494eac2a4995e05b25a0dfebd, type: 2}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 4d6719ac2b4f50341b2ad62f876bd22e, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 617967563}
   - component: {fileID: 617967562}
+  - component: {fileID: 617967564}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -161,10 +162,10 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.546
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_Strength: 0.5
+    m_Bias: 1
+    m_NormalBias: 1
+    m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -215,6 +216,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 110.02899, y: -23.089996, z: 0.84599304}
+--- !u!114 &617967564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617967561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UsePipelineSettings: 1
 --- !u!1 &1589012203
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,7 +320,7 @@ Transform:
   m_GameObject: {fileID: 1589012203}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -457,10 +471,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc54f84617e6f1458716c7537cc1f34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 100
-  animationSpeed: 50
-  turnSpeed: 80
+  defaultSpeed: 1
+  turnSpeed: 150
   pushPower: 2
+  jumpPower: 1
+  gravity: -18.81
 --- !u!143 &2116009489
 CharacterController:
   m_ObjectHideFlags: 0
@@ -472,13 +487,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
+  m_Height: 1.99
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.076, z: 0}
 --- !u!1 &9171100800583846
 GameObject:
   m_ObjectHideFlags: 0
