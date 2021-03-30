@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-namespace PixelUI
+namespace JacobExperimental.PixelUI.V1
 {
     [System.Serializable]
     public struct Pixel
@@ -44,6 +44,8 @@ namespace PixelUI
 
     public class PixelObj : MonoBehaviour
     {
+        [Header("Pixels V1")]
+
         public Transform pixels;
         public GameObject pixelPrefab;
 
