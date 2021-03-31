@@ -11,6 +11,8 @@ namespace JacobExperimental.PixelUI.V2
         public Vector2 size, position, velocity, constantVelocity;
         public float endLife;
         public Color color;
+        public bool shouldCull;
+        public bool cullKill;
         [HideInInspector] public int bufferIndex; // Helps with finding the right draw lod.
     }
 
@@ -25,17 +27,39 @@ namespace JacobExperimental.PixelUI.V2
             pixelRenderBuffer.Add(p);
         }
 
+        public Pixel CheckCulling(Pixel p)
+        {
+            float width = rectTransform.rect.width;
+            float halfWidth = width / 2;
+            float height = rectTransform.rect.height;
+            float halfHeight = height / 2;
+
+            Vector2 halfSize = p.size / 2;
+            Vector2 position = p.position;
+
+            p.shouldCull = (((position.x + halfSize.x) < -halfWidth) || ((position.x - halfSize.x) > halfWidth)) || (((position.y + halfSize.y) < -halfHeight) || ((position.y - halfSize.y) > halfHeight));
+
+            return p;
+        }
+
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear();
+
+            int buffer = 0;
 
             // Vertex's are better drawn CLOCKWISE!
             for (int i = 0; i < pixelRenderBuffer.Count; i++)
             {
                 Pixel p = pixelRenderBuffer[i];
-                p.bufferIndex = i*4;
+
+                if (p.shouldCull) continue;
+
+                p.bufferIndex = buffer * 4;
 
                 DrawVerticesForPixel(p, vh);
+
+                buffer++;
             }
         }
 
