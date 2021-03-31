@@ -9,22 +9,31 @@ public class Player : MonoBehaviour
     Animator animator = null;
 
     public float defaultSpeed = 5.0f;
-    public float turnSpeed = 80.0f;
+    public float turnSpeed = 1.0f;
+    public float lookSpeed = 1.0f;
     public float pushPower = 2.0f;
     public float jumpPower = 10.0f;
     public float gravity = -9.81f;
+
+    public float aimLowerClamp;
+    public float aimUpperClamp;
 
     private float speed = 5.0f;
     private bool jumping = false; // FOr holding jump
     private bool groundedPlayer = false;
     private Vector3 playerVelocity = Vector3.zero;
 
+    public Transform target;
+
+    private RaycastHit aim;
+    private Camera cam;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-
+        cam = Camera.main;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -47,6 +56,12 @@ public class Player : MonoBehaviour
 
         transform.Rotate(transform.up, leftX * turnSpeed * Time.deltaTime);
 
+        cam.transform.Rotate(-Vector3.right, leftY * lookSpeed * Time.deltaTime);
+
+        //Physics.Raycast(cam.transform.position, cam.transform.forward, out aim, 10, ~(1 << 8));
+
+        target.position = cam.transform.position + cam.transform.forward * 10;
+
         animator.SetFloat("Xpos", Mathf.Clamp(horizontal, -1, 1), 1.0f, Time.deltaTime * 10.0f);
         animator.SetFloat("Ypos", Mathf.Clamp(vertical, -1, 1), 1.0f, Time.deltaTime * 10.0f);
 
@@ -68,6 +83,12 @@ public class Player : MonoBehaviour
 
         if (jumping != animator.GetBool("IsJumping"))
             animator.SetBool("IsJumping", jumping);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(target.position, 1);
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)

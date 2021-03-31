@@ -730,6 +730,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fc92bc44bf263e4e826cc5919095aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runParticles: 1
+  particleConstantVelocity: {x: -10, y: -10}
+  particleSize: {x: 5, y: 5}
+  particleColor: {r: 0.9339623, g: 0.40970984, b: 0.40970984, a: 1}
+  sizeOverTime:
+    start: {x: 0, y: 0}
+    end: {x: 0, y: 0}
+    speed: 0
+  cullKillsParticles: 0
+  particleEndLife: 1
   particleSpawnSpeed: 0.01
+  runParticles: 1
   myCanvas: {fileID: 883071897}
