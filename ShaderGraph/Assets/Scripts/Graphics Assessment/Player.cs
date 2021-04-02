@@ -18,16 +18,19 @@ namespace ThirdPersonPlayerShooter
         [System.Serializable]
         public struct GunFiring
         {
-            public GameObject bulletObject;
             public TracerFX bulletTracer;
             public Vector3 bulletSpread;
             public int bulletCount;
             public float bulletForce;
             public float bulletDamage;
             public float bulletPenetration;
+            public Transform firePos;
+            public bool automatic;
+            public float fireRate;
             public LayerMask bulletFilter;
         }
 
+        #region EditorFields
         public float defaultSpeed = 5.0f;
         public float turnSpeed = 1.0f;
         public float lookSpeed = 1.0f;
@@ -46,18 +49,18 @@ namespace ThirdPersonPlayerShooter
         [Space()]
 
         public GunFiring bulletData;
+        #endregion
 
-        [Space()]
-
+        #region Fields
         private float speed = 5.0f;
         private bool jumping = false; // FOr holding jump
         private bool groundedPlayer = false;
-
         private Vector3 playerVelocity = Vector3.zero;
-        private RaycastHit aim;
         private Camera cam;
         private CharacterController controller = null;
         private Animator animator = null;
+        private float lastGunFire;
+        #endregion
 
         // Start is called before the first frame update
         void Start()
@@ -142,9 +145,10 @@ namespace ThirdPersonPlayerShooter
             Move();
             Aim();
             
-            if (Input.GetMouseButtonDown(0))
+            if (lastGunFire < Time.realtimeSinceStartup && ((!bulletData.automatic && Input.GetMouseButtonDown(0)) || (bulletData.automatic && Input.GetMouseButton(0))))
             {
-                Bullet.ShootBullets(bulletData.bulletObject, cam.transform.position, cam.transform.forward, bulletData.bulletCount, bulletData.bulletSpread, bulletData.bulletForce, bulletData.bulletDamage, bulletData.bulletPenetration, bulletData.bulletTracer, bulletData.bulletFilter);
+                lastGunFire = Time.realtimeSinceStartup + bulletData.fireRate;
+                Bullet.ShootBullets(bulletData.firePos.position, cam.transform.forward, bulletData.bulletCount, bulletData.bulletSpread, bulletData.bulletForce, bulletData.bulletDamage, bulletData.bulletPenetration, bulletData.bulletTracer, bulletData.bulletFilter);
             }
         }
 

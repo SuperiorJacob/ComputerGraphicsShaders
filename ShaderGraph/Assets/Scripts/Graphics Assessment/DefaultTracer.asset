@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: DefaultTracer
   m_EditorClassIdentifier: 
   particleTracer: {fileID: 105844533822926535, guid: 7cbdceeb909851644bea0eab2df94059, type: 3}
-  speed: 1
+  speed: 5

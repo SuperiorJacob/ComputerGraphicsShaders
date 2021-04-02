@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3640a229291a31343ba16473a48ed845, type: 3}
+  m_Name: DefaultTracer
+  m_EditorClassIdentifier: 
+  particleTracer: {fileID: 105844533822926535, guid: 7cbdceeb909851644bea0eab2df94059, type: 3}
+  speed: 5
+  decal: {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}

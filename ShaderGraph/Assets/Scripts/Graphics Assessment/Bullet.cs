@@ -15,51 +15,36 @@ namespace ThirdPersonPlayerShooter
 
     public class Bullet : MonoBehaviour
     {
-        public Vector3 shootPos;
-        public Vector3 shootDir;
-        public Vector3 spread;
-        public float force;
-        public float damage;
-        public float penetration;
-        public TracerFX tracerFX;
-        public LayerMask filter;
-
-        public RaycastHit hit;
-
-        private Tracer tracer;
-
-        public void ApplyDamage()
+        public static void ApplyDamage(float a_force, RaycastHit a_hit, float a_damage)
         {
-            Rigidbody rb = hit.rigidbody;
+            Rigidbody rb = a_hit.rigidbody;
 
             if (rb)
-                rb.velocity = shootDir * force;
+                rb.velocity = a_hit.normal * a_force;
         }
 
-        public void Initiate(Vector3 a_shootPos, Vector3 a_shootDir, int a_bulletNum, Vector3 a_spread, float a_force, float a_damage, float a_penetration, TracerFX a_tracer, LayerMask a_filter)
+        public static void Initiate(Vector3 a_shootPos, Vector3 a_shootDir, Vector3 a_spread, float a_force, float a_damage, float a_penetration, TracerFX a_tracer, LayerMask a_filter)
         {
-            shootPos = a_shootPos; shootDir = a_shootDir; spread = a_spread; force = a_force; damage = a_damage; penetration = a_penetration; tracerFX = a_tracer; filter = a_filter;
+            a_shootDir = a_shootDir + new Vector3(Random.Range(-a_spread.x, a_spread.x), Random.Range(-a_spread.y, a_spread.y), Random.Range(-a_spread.z, a_spread.z));
 
-            shootDir = shootDir + new Vector3(Random.Range(-spread.x, spread.x), Random.Range(-spread.y, spread.y), Random.Range(-spread.z, spread.z));
-
-            if (Physics.Raycast(shootPos, shootDir, out hit, Mathf.Infinity, filter))
+            RaycastHit hit;
+            if (Physics.Raycast(a_shootPos, a_shootDir, out hit, 1000, a_filter))
             {
-                tracer = tracerFX.CreateTracer(shootPos, new Quaternion(), shootPos, hit.point);
+                a_tracer.CreateTracer(a_shootPos, new Quaternion(), a_shootPos, hit.point);
 
-                ApplyDamage();
+                Bullet.ApplyDamage(a_force, hit, a_damage);
             }
-
-            Destroy(gameObject);
+            else
+            {
+                a_tracer.CreateTracer(a_shootPos, new Quaternion(), a_shootPos, a_shootPos + a_shootDir * 100);
+            }
         }
 
-        public static void ShootBullets(GameObject bulletObject, Vector3 a_shootPos, Vector3 a_shootDir, int a_bulletNum, Vector3 a_spread, float a_force, float a_damage, float a_penetration, TracerFX a_tracer, LayerMask a_filter)
+        public static void ShootBullets(Vector3 a_shootPos, Vector3 a_shootDir, int a_bulletNum, Vector3 a_spread, float a_force, float a_damage, float a_penetration, TracerFX a_tracer, LayerMask a_filter)
         {
             for (int i = 0; i < a_bulletNum; i++)
             {
-                GameObject inst = Instantiate(bulletObject);
-
-                Bullet bullet = inst.GetComponent<Bullet>();
-                bullet.Initiate(a_shootPos, a_shootDir, a_bulletNum, a_spread, a_force, a_damage, a_penetration, a_tracer, a_filter);
+                Bullet.Initiate(a_shootPos, a_shootDir, a_spread, a_force, a_damage, a_penetration, a_tracer, a_filter);
             }
         }
     }
