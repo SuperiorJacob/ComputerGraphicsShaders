@@ -76,12 +76,15 @@ namespace ThirdPersonPlayerShooter
         /// <param name="a_penetration">How many objects will the bullet pass through before destroying itself?</param>
         /// <param name="a_tracer">What tracer will it use?</param>
         /// <param name="a_filter">What layers will the bullet ignore?</param>
-        public static void ShootBullets(Vector3 a_shootPos, Vector3 a_shootDir, int a_bulletNum, Vector3 a_spread, float a_force, float a_damage, float a_penetration = 0, TracerFX a_tracer = null, LayerMask a_filter = default)
+        public static List<RaycastHit> ShootBullets(Vector3 a_shootPos, Vector3 a_shootDir, int a_bulletNum, Vector3 a_spread, float a_force, float a_damage, float a_penetration = 0, TracerFX a_tracer = null, LayerMask a_filter = default)
         {
+            List<RaycastHit> bulletHits = new List<RaycastHit>();
             for (int i = 0; i < a_bulletNum; i++)
             {
-                Bullet.Initiate(a_shootPos, a_shootDir, a_spread, a_force, a_damage, a_penetration, a_tracer, a_filter);
+                bulletHits.Add(Bullet.Initiate(a_shootPos, a_shootDir, a_spread, a_force, a_damage, a_penetration, a_tracer, a_filter));
             }
+
+            return bulletHits;
         }
     }
 

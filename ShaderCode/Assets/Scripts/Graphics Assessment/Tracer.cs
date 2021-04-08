@@ -13,7 +13,8 @@ namespace ThirdPersonPlayerShooter
         public RaycastHit hit;
 
         private bool finished = false;
-        private Texture decal;
+        private GameObject impactFX;
+        private float impactTimer;
         private ParticleSystem particleSys;
 
         public void DrawTracer()
@@ -25,17 +26,20 @@ namespace ThirdPersonPlayerShooter
 
         public void Init(TracerFX a_tracer, Vector3 a_start, Vector3 a_end)
         {
-            speed = a_tracer.speed * a_tracer.speed;
+            speed = a_tracer._tracerSpeed * a_tracer._tracerSpeed;
             start = a_start;
             end = a_end;
-            decal = a_tracer.decal;
+            impactFX = a_tracer._impactFX;
+            impactTimer = a_tracer._impactDestroyTimer;
 
             particleSys = GetComponent<ParticleSystem>();
         }
 
         public void ImpactFX()
         {
-            if (hit.transform == null) return;
+            if (hit.transform == null || impactFX == null) return;
+
+            Destroy(Instantiate(impactFX, hit.point, Quaternion.identity, null), impactTimer);
 
             // USING DECAL SHADER
             //MeshRenderer mesh;

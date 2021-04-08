@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3640a229291a31343ba16473a48ed845, type: 3}
   m_Name: DefaultTracer
   m_EditorClassIdentifier: 
-  particleTracer: {fileID: 105844533822926535, guid: 7cbdceeb909851644bea0eab2df94059, type: 3}
-  speed: 5
-  decal: {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}
+  _particleTracer: {fileID: 105844533822926535, guid: 7cbdceeb909851644bea0eab2df94059, type: 3}
+  _impactFX: {fileID: 1570927096764274, guid: 643639841fb531e4ba8097fed4eb9ac7, type: 3}
+  _impactDestroyTimer: 1
+  _tracerSpeed: 5
