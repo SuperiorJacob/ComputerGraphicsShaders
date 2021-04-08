@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: DefaultTracer
   m_EditorClassIdentifier: 
   _particleTracer: {fileID: 105844533822926535, guid: 7cbdceeb909851644bea0eab2df94059, type: 3}
-  _impactFX: {fileID: 1570927096764274, guid: 643639841fb531e4ba8097fed4eb9ac7, type: 3}
+  _impactFX: {fileID: 3894010057030192931, guid: 2e641812906273449b8cb7f1847bf8c1, type: 3}
   _impactDestroyTimer: 1
-  _tracerSpeed: 5
+  _tracerSpeed: 4

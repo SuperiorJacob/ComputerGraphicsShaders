@@ -7,6 +7,8 @@ namespace ThirdPersonPlayerShooter
     [RequireComponent(typeof(CharacterController)), RequireComponent(typeof(Animator))]
     public class Player : MonoBehaviour
     {
+        public static Player main;
+
         #region EditorDataOrganisers (structs)
         [System.Serializable]
         public struct GunRigging
@@ -30,11 +32,20 @@ namespace ThirdPersonPlayerShooter
             public float fireRate;
             public LayerMask bulletFilter;
         }
+
+        [System.Serializable]
+        public struct Ghosting
+        {
+            public Material ghostBody;
+            public Material worldGhost;
+            public Material ghostGun;
+        }
         #endregion
 
         #region Fields
         // FOR DECAL SHADER
         //public static List<Vector4> bulletDecals = new List<Vector4>();
+        [Header("Player Controller")]
 
         public float _defaultSpeed = 5.0f;
         public float _turnSpeed = 1.0f;
@@ -46,40 +57,37 @@ namespace ThirdPersonPlayerShooter
         public Transform _objectFollowing;
 
         [Space()]
+        [Header("Ghost Setup")]
 
-        public Material _ghostBody;
-        public Material _worldGhost;
-        public Material _ghostGun;
+        public Ghosting _ghostData;
 
         [Space()]
+        [Header("Gun Control")]
 
         public GunRigging _gunControl;
 
         public float _aimLowerClamp;
         public float _aimUpperClamp;
         public float _aimSpeed;
-        public GameObject _muzzleFlash;
+
         public Transform _target;
 
         [Space()]
 
         public GunFiring _bulletData;
 
-        private float movementSpeed = 5.0f;
-
         private bool isJumping = false; // FOr holding jump
         private bool isGrounded = false;
 
         private Vector3 playerVelocity = Vector3.zero;
+        private Vector2 cameraMovement = Vector2.zero;
 
         private Camera sceneCamera;
         private CharacterController characterController = null;
         private Animator characterAnimator = null;
 
+        private float movementSpeed = 5.0f;
         private float lastGunFire;
-
-        private Vector2 cameraMovement = Vector2.zero;
-
         private float defaultFieldOfView = 75;
 
         private List<RaycastHit> bulletHits; // List of previous bullet hits.
@@ -100,17 +108,19 @@ namespace ThirdPersonPlayerShooter
         // Start is called before the first frame update
         void Start()
         {
+            main = this;
+
             characterController = GetComponent<CharacterController>();
             characterAnimator = GetComponent<Animator>();
             sceneCamera = Camera.main;
             defaultFieldOfView = sceneCamera.fieldOfView;
             Cursor.lockState = CursorLockMode.Locked;
 
-            _ghostBody.SetFloat("_Transparency", 1);
-            _ghostBody.SetFloat("_RimPower", 8f);
-            _ghostGun.SetFloat("_RimPower", 8f);
-            _ghostGun.SetFloat("_Transparency", 1);
-            _worldGhost.SetFloat("_Transparency", 1);
+            _ghostData.ghostBody.SetFloat("_Transparency", 1);
+            _ghostData.ghostBody.SetFloat("_RimPower", 8f);
+            _ghostData.ghostGun.SetFloat("_RimPower", 8f);
+            _ghostData.ghostGun.SetFloat("_Transparency", 1);
+            _ghostData.worldGhost.SetFloat("_Transparency", 1);
         }
 
         private void GunControlWeights(float a_scopingGunWeight, float a_scopingLeftWeight, float a_unScopingLeftWeight)
@@ -222,7 +232,6 @@ namespace ThirdPersonPlayerShooter
         private void Shoot()
         {
             isShooting = (!_bulletData.automatic && Input.GetMouseButtonDown(0)) || (_bulletData.automatic && Input.GetMouseButton(0));
-            _muzzleFlash.SetActive(isShooting);
 
             if (lastGunFire < Time.realtimeSinceStartup && isShooting)
             {
@@ -233,13 +242,13 @@ namespace ThirdPersonPlayerShooter
 
         public void GhostMode(float a_transparency)
         {
-            _ghostBody.SetFloat("_Transparency", a_transparency);
-            _ghostBody.SetFloat("_RimPower", (7.5f * a_transparency) + 0.5f);
+            _ghostData.ghostBody.SetFloat("_Transparency", a_transparency);
+            _ghostData.ghostBody.SetFloat("_RimPower", (7.5f * a_transparency) + 0.5f);
 
-            _ghostGun.SetFloat("_RimPower", (7.5f * a_transparency) + 0.5f);
-            _ghostGun.SetFloat("_Transparency", a_transparency);
+            _ghostData.ghostGun.SetFloat("_RimPower", (7.5f * a_transparency) + 0.5f);
+            _ghostData.ghostGun.SetFloat("_Transparency", a_transparency);
 
-            _worldGhost.SetFloat("_Transparency", a_transparency);
+            _ghostData.worldGhost.SetFloat("_Transparency", a_transparency);
 
             LayerMask layer;
             if (a_transparency > 0.5)
@@ -272,16 +281,12 @@ namespace ThirdPersonPlayerShooter
                 Move(false);
                 Aim(false);
 
-                if (_ghostBody.GetFloat("_Transparency") > 0.5)
+                if (_ghostData.ghostBody.GetFloat("_Transparency") > 0.5)
                 {
                     Shoot();
                 }
             }
-            else
-            {
-                isShooting = false;
-                _muzzleFlash.SetActive(false);
-            }
+            else isShooting = false;
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
