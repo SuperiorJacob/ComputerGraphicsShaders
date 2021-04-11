@@ -30,6 +30,12 @@ namespace ThirdPersonPlayerShooter
 
             if (rb)
                 rb.velocity = a_hit.normal * a_force;
+
+            Enemy enemy;
+            if (a_hit.transform.TryGetComponent(out enemy))
+            {
+                enemy.TakeDamage(a_damage);
+            }
         }
 
         /// <summary>
