@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EnemyDissolve
-  m_Shader: {fileID: -6465566751694194690, guid: 8928718d4d10e1f4784acebd16a60cf1, type: 3}
+  m_Name: Interior
+  m_Shader: {fileID: -6465566751694194690, guid: 54bb3e8e9eed0ef4da9befa2be9d791e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,6 +19,34 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Cubemap_39D0060E:
+        m_Texture: {fileID: 8900000, guid: 70bf88f53c1ce624e912dd6d72c6d40c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Cubemap_5EE2B0FE:
+        m_Texture: {fileID: 8900000, guid: 951b669e6891ae14da290ad0aef4586f, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Cubemap_A8949E1B:
+        m_Texture: {fileID: 8900000, guid: 5dc5a445e2aca0c4c979183f5279e464, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Cubemap_B3793A2C:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2DArray_3254F70:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_94A34B69:
+        m_Texture: {fileID: 2800000, guid: 29fb5e610af15814f91692e5ffa4af31, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_CCEB743E:
+        m_Texture: {fileID: 2800000, guid: 6fda1e9062d082d449bafc3d0b8f4716, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -48,10 +76,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - D_Amount: 0
-    - Vector1_1D9A2AE: 0.1
-    - Vector1_EFE64959: 60
-    - Vector1_FEFF47F1: 0
+    - Cutoff: 0
+    - Vector1_470CCFFA: 0.3
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -74,13 +100,13 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_6DF76E71: {r: 0, g: 38.075047, b: 0.06638594, a: 0}
+    - Vector2_E53EDB49: {r: 12.5, g: 5, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &5565555039805404234
+--- !u!114 &254177882448003049
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
