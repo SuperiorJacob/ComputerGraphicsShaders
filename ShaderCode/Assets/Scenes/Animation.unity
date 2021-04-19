@@ -1257,7 +1257,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 344040440}
   m_HandleRect: {fileID: 1941089185}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.1
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 1
@@ -2100,6 +2100,7 @@ MonoBehaviour:
   _turnSpeed: 1
   _pushPower: 2
   _gravity: -9.81
+  _dissolveMaterial: {fileID: 2100000, guid: b7aaeadd57d7ee947810364a0706156f, type: 2}
 --- !u!114 &376403946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3421,7 +3422,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &658170894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3598,6 +3599,7 @@ MonoBehaviour:
   _turnSpeed: 5
   _pushPower: 2
   _gravity: -9.81
+  _dissolveMaterial: {fileID: 2100000, guid: b7aaeadd57d7ee947810364a0706156f, type: 2}
 --- !u!1 &665706249
 GameObject:
   m_ObjectHideFlags: 0

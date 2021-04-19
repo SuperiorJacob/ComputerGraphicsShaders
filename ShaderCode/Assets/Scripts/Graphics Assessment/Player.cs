@@ -116,11 +116,11 @@ namespace ThirdPersonPlayerShooter
             defaultFieldOfView = sceneCamera.fieldOfView;
             Cursor.lockState = CursorLockMode.Locked;
 
-            _ghostData.ghostBody.SetFloat("_Transparency", 1);
-            _ghostData.ghostBody.SetFloat("_RimPower", 8f);
-            _ghostData.ghostGun.SetFloat("_RimPower", 8f);
-            _ghostData.ghostGun.SetFloat("_Transparency", 1);
-            _ghostData.worldGhost.SetFloat("_Transparency", 1);
+            _ghostData.ghostBody.SetFloat("RL_Transparency", 1);
+            _ghostData.ghostBody.SetFloat("RL_RimPower", 8f);
+            _ghostData.ghostGun.SetFloat("RL_RimPower", 8f);
+            _ghostData.ghostGun.SetFloat("RL_Transparency", 1);
+            _ghostData.worldGhost.SetFloat("RL_Transparency", 1);
         }
 
         private void GunControlWeights(float a_scopingGunWeight, float a_scopingLeftWeight, float a_unScopingLeftWeight)
@@ -242,13 +242,13 @@ namespace ThirdPersonPlayerShooter
 
         public void GhostMode(float a_transparency)
         {
-            _ghostData.ghostBody.SetFloat("_Transparency", a_transparency);
-            _ghostData.ghostBody.SetFloat("_RimPower", (7.5f * a_transparency) + 0.5f);
+            _ghostData.ghostBody.SetFloat("RL_Transparency", a_transparency);
+            _ghostData.ghostBody.SetFloat("RL_RimPower", (7.5f * a_transparency) + 0.5f);
 
-            _ghostData.ghostGun.SetFloat("_RimPower", (7.5f * a_transparency) + 0.5f);
-            _ghostData.ghostGun.SetFloat("_Transparency", a_transparency);
+            _ghostData.ghostGun.SetFloat("RL_RimPower", (7.5f * a_transparency) + 0.5f);
+            _ghostData.ghostGun.SetFloat("RL_Transparency", a_transparency);
 
-            _ghostData.worldGhost.SetFloat("_Transparency", a_transparency);
+            _ghostData.worldGhost.SetFloat("RL_Transparency", a_transparency);
 
             LayerMask layer;
             if (a_transparency > 0.5)
@@ -281,7 +281,7 @@ namespace ThirdPersonPlayerShooter
                 Move(false);
                 Aim(false);
 
-                if (_ghostData.ghostBody.GetFloat("_Transparency") > 0.5)
+                if (_ghostData.ghostBody.GetFloat("RL_Transparency") > 0.5)
                 {
                     Shoot();
                 }

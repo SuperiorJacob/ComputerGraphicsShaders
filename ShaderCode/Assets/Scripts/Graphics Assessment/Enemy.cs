@@ -17,6 +17,8 @@ namespace ThirdPersonPlayerShooter
         public float _pushPower = 2.0f;
         public float _gravity = -9.81f;
 
+        public Material _dissolveMaterial;
+
         private bool isGrounded = false;
         private bool isDead = false;
 
@@ -33,6 +35,8 @@ namespace ThirdPersonPlayerShooter
         {
             characterController = GetComponent<CharacterController>();
             characterAnimator = GetComponent<Animator>();
+
+            _dissolveMaterial.SetFloat("D_Amount", 0);
 
             health = _baseHealth;
             maxHealth = health;
@@ -51,6 +55,11 @@ namespace ThirdPersonPlayerShooter
 
                 characterAnimator.SetBool("isDead", true);
 
+                foreach (SkinnedMeshRenderer a_smr in GetComponentsInChildren<SkinnedMeshRenderer>())
+                {
+                    a_smr.material = _dissolveMaterial;
+                }
+                   
                 Destroy(gameObject, 5);
             }
         }
@@ -75,7 +84,18 @@ namespace ThirdPersonPlayerShooter
 
         private void FixedUpdate()
         {
-            if (isDead) return;
+            if (isDead)
+            {
+                foreach (SkinnedMeshRenderer a_smr in GetComponentsInChildren<SkinnedMeshRenderer>())
+                {
+                    float dAmount = _dissolveMaterial.GetFloat("D_Amount");
+                    float dUp = dAmount + (0.1f * Time.deltaTime);
+
+                    a_smr.sharedMaterials[0].SetFloat("D_Amount", dUp);
+                }
+
+                return;
+            }
 
             Move();
         }
