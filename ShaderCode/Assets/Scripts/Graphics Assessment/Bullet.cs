@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace ThirdPersonPlayerShooter
 {
+    /// <summary>
+    /// Damage types used for damage effects etc.
+    /// </summary>
     public enum DamageType
     {
         Bullet,
@@ -11,6 +14,21 @@ namespace ThirdPersonPlayerShooter
         Fall,
         Burn,
         Blast
+    }
+
+    /// <summary>
+    /// Bullet data used to store and easily shoot bullets.
+    /// </summary>
+    public struct BulletData
+    {
+        public Vector3 origin; // Start pos.
+        public Vector3 direction; // Bullet direction
+        public Vector3 spread; // Bullet spread
+        public float force;
+        public float damage;
+        public float penetration;
+        public TracerFX tracer;
+        public LayerMask filter;
     }
 
     /// <summary>
@@ -29,7 +47,7 @@ namespace ThirdPersonPlayerShooter
             Rigidbody rb = a_hit.rigidbody;
 
             if (rb)
-                rb.velocity = a_hit.normal * a_force;
+                rb.velocity = a_hit.normal * -a_force;
 
             Enemy enemy;
             if (a_hit.transform.TryGetComponent(out enemy))
@@ -50,24 +68,59 @@ namespace ThirdPersonPlayerShooter
         /// <param name="a_tracer">What tracer will it use?</param>
         /// <param name="a_filter">What layers will the bullet ignore?</param>
         /// <returns>Returns the bullet hit as its shot using raycast.</returns>
-        public static RaycastHit Initiate(Vector3 a_shootPos, Vector3 a_shootDir, Vector3 a_spread, float a_force, float a_damage, float a_penetration = 0, TracerFX a_tracer = null, LayerMask a_filter = default)
+        public static RaycastHit Initiate(Vector3 a_shootPos, Vector3 a_shootDir, Vector3 a_spread, float a_force, float a_damage, float a_penetration = 0, TracerFX a_tracer = null, LayerMask a_filter = default, bool a_applyTracer = true)
         {
             a_shootDir += new Vector3(Random.Range(-a_spread.x, a_spread.x), Random.Range(-a_spread.y, a_spread.y), Random.Range(-a_spread.z, a_spread.z));
+
+            // I love inline initialization <3
+            BulletData data = new BulletData {
+                origin = a_shootPos,
+                direction = a_shootDir,
+                spread = a_spread,
+                force = a_force,
+                damage = a_damage,
+                penetration = a_penetration,
+                tracer = a_tracer,
+                filter = a_filter
+            };
 
             RaycastHit hit;
             if (Physics.Raycast(a_shootPos, a_shootDir, out hit, 1000, a_filter))
             {
-                Bullet.ApplyDamage(a_force, hit, a_damage);
+                if (!a_applyTracer)
+                {
+                    Bullet.ApplyDamage(a_force, hit, a_damage);
+
+                    if (a_penetration > 0)
+                    {
+                        a_penetration -= 1;
+
+                        Bullet.Initiate(hit.point + a_shootDir * 0.5f, a_shootDir, a_spread, a_force, a_damage, a_penetration, a_tracer, a_filter, false);
+                    }
+                }
             }
             else
             {
                 hit.point = a_shootPos + a_shootDir * 100;
             }
 
-            Tracer tracer = a_tracer.CreateTracer(a_shootPos, new Quaternion(), a_shootPos, hit.point);
-            tracer.hit = hit;
+            if (a_applyTracer)
+            {
+                Tracer tracer = a_tracer.CreateTracer(a_shootPos, new Quaternion(), a_shootPos, hit.point, data);
+                tracer.hit = hit;
+            }
 
             return hit;
+        }
+
+        /// <summary>
+        /// Initiating a bullet and shooting it with respected effects.
+        /// </summary>
+        /// <param name="a_bulletData">A simplified data version of the original.</param>
+        /// <returns>Returns the bullet hit as its shot using raycast.</returns>
+        public static RaycastHit Initiate(BulletData a_bulletData)
+        {
+            return Initiate(a_bulletData.origin, a_bulletData.direction, a_bulletData.spread, a_bulletData.force, a_bulletData.damage, a_bulletData.penetration, a_bulletData.tracer, a_bulletData.filter);
         }
 
         /// <summary>

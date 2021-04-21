@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace ThirdPersonPlayerShooter
 {
+    /// <summary>
+    /// Player class is the main class used by the user which allows for lots of data manipulation and gameplay mechanics.
+    /// </summary>
     [RequireComponent(typeof(CharacterController)), RequireComponent(typeof(Animator))]
     public class Player : MonoBehaviour
     {
@@ -43,11 +46,9 @@ namespace ThirdPersonPlayerShooter
         #endregion
 
         #region Fields
-        // FOR DECAL SHADER
-        //public static List<Vector4> bulletDecals = new List<Vector4>();
         [Header("Player Controller")]
 
-        public float _defaultSpeed = 5.0f;
+        [Tooltip("How fast is the player without sprinting?")] public float _defaultSpeed = 5.0f;
         public float _turnSpeed = 1.0f;
         public float _lookSpeed = 1.0f;
         public Vector2 _upwardsLock = Vector2.zero;
@@ -55,6 +56,11 @@ namespace ThirdPersonPlayerShooter
         public float _jumpPower = 10.0f;
         public float _gravity = -9.81f;
         public Transform _objectFollowing;
+        public Transform _enemyTarget;
+
+        [Space()]
+        [Header("UI")]
+        public UnityEngine.UI.Slider _healthBar;
 
         [Space()]
         [Header("Ghost Setup")]
@@ -76,7 +82,9 @@ namespace ThirdPersonPlayerShooter
 
         public GunFiring _bulletData;
 
-        private bool isJumping = false; // FOr holding jump
+        // Private
+
+        private bool isJumping = false; // For holding jump
         private bool isGrounded = false;
 
         private Vector3 playerVelocity = Vector3.zero;
@@ -103,8 +111,15 @@ namespace ThirdPersonPlayerShooter
         private bool isUsingRunningInput = false;
 
         private bool isShooting = false;
+
+        private float health = 100;
+
+        private float maxHealth = 100;
+
+        private bool isDead = false;
         #endregion
 
+        #region Functions
         // Start is called before the first frame update
         void Start()
         {
@@ -121,8 +136,17 @@ namespace ThirdPersonPlayerShooter
             _ghostData.ghostGun.SetFloat("RL_RimPower", 8f);
             _ghostData.ghostGun.SetFloat("RL_Transparency", 1);
             _ghostData.worldGhost.SetFloat("RL_Transparency", 1);
+
+            _healthBar.maxValue = maxHealth;
+            _healthBar.value = health;
         }
 
+        /// <summary>
+        /// A simple way to control all gun animation weights in one line.
+        /// </summary>
+        /// <param name="a_scopingGunWeight">Scoped gun weight (zoom in)</param>
+        /// <param name="a_scopingLeftWeight">Scoping arm weight (zoom in)</param>
+        /// <param name="a_unScopingLeftWeight">Unscoping gun weight (normal)</param>
         private void GunControlWeights(float a_scopingGunWeight, float a_scopingLeftWeight, float a_unScopingLeftWeight)
         {
             _gunControl.scopingGunWeight.weight = a_scopingGunWeight;
@@ -130,6 +154,13 @@ namespace ThirdPersonPlayerShooter
             _gunControl.unScopingLeftWeight.weight = a_unScopingLeftWeight;
         }
 
+        /// <summary>
+        /// Custom function used to clamp angles to prevent buggy aim.
+        /// </summary>
+        /// <param name="a_angle">Angle to clamp.</param>
+        /// <param name="a_from">Minimum clamp</param>
+        /// <param name="a_to">Maximum clamp</param>
+        /// <returns></returns>
         private float ClampAngle(float a_angle, float a_from, float a_to)
         {
             if (a_angle > 180) a_angle = 360 - a_angle;
@@ -138,6 +169,10 @@ namespace ThirdPersonPlayerShooter
             return a_angle;
         }
 
+        /// <summary>
+        /// Player aim control.
+        /// </summary>
+        /// <param name="a_isPhysics">FixedUpdate = true, Update = false. Very important.</param>
         private void Aim(bool a_isPhysics)
         {
             if (a_isPhysics)
@@ -183,6 +218,10 @@ namespace ThirdPersonPlayerShooter
             }
         }
 
+        /// <summary>
+        /// Player movement control.
+        /// </summary>
+        /// <param name="a_isPhysics">FixedUpdate = true, Update = false. Very important.</param>
         private void Move(bool a_isPhysics)
         {
             if (a_isPhysics)
@@ -229,6 +268,9 @@ namespace ThirdPersonPlayerShooter
             }
         }
 
+        /// <summary>
+        /// Used to shoot from the gun.
+        /// </summary>
         private void Shoot()
         {
             isShooting = (!_bulletData.automatic && Input.GetMouseButtonDown(0)) || (_bulletData.automatic && Input.GetMouseButton(0));
@@ -240,6 +282,7 @@ namespace ThirdPersonPlayerShooter
             }
         }
 
+        // Stuff used to UI interaction.
         public void GhostMode(float a_transparency)
         {
             _ghostData.ghostBody.SetFloat("RL_Transparency", a_transparency);
@@ -263,6 +306,35 @@ namespace ThirdPersonPlayerShooter
             gameObject.layer = layer;
         }
 
+        public void BulletPenetration(float a_penetration)
+        {
+            _bulletData.bulletPenetration = a_penetration;
+        }
+
+        public void ResetWorld()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Animation");
+        }
+        //
+
+        // Enemy/Player could be inheriting a "Damageable" baseclass but I didn't think about it when I coded this..
+        /// <summary>
+        /// Take damage for the player using damage and damage type.
+        /// </summary>
+        /// <param name="a_amount">Damage amount</param>
+        /// <param name="a_dmgType">Damage type used for effects and multiplyers.</param>
+        public void TakeDamage(float a_amount, DamageType a_dmgType = DamageType.Slash)
+        {
+            if (isDead) return;
+
+            health -= a_amount;
+
+            if (health < 0)
+            {
+                isDead = true;
+            }
+        }
+
         // Used for physics movement to keep it exact regardless of computer specs.
         private void FixedUpdate()
         {
@@ -276,6 +348,8 @@ namespace ThirdPersonPlayerShooter
         // Update is called once per frame
         private void Update()
         {
+            _healthBar.value = Mathf.Lerp(_healthBar.value, health, Time.deltaTime * 2f); // Should be the only way to lerp healthbars.
+
             if (Cursor.lockState != CursorLockMode.Confined)
             {
                 Move(false);
@@ -294,6 +368,7 @@ namespace ThirdPersonPlayerShooter
             }
         }
 
+        // Draw target in the editor.
         void OnDrawGizmosSelected()
         {
             // Aim
@@ -301,6 +376,7 @@ namespace ThirdPersonPlayerShooter
             Gizmos.DrawWireSphere(_target.position, 1);
         }
 
+        // Moving rigidbody objects around in the scene.
         void OnControllerColliderHit(ControllerColliderHit hit)
         {
             // Pushing
@@ -314,8 +390,6 @@ namespace ThirdPersonPlayerShooter
             Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
             body.velocity = pushDirection * _pushPower;
         }
+        #endregion
     }
 }
-
-/// MAKE A LITTLE GHOST FLYING NEAR YOUR HEAD WHEN U CLICK (UI) IT MAKES YOU INTO A GHOST.
-/// ENEMIES THAT ATTACK.

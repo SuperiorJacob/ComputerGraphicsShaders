@@ -24,11 +24,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Cubemap_5EE2B0FE:
-        m_Texture: {fileID: 8900000, guid: 951b669e6891ae14da290ad0aef4586f, type: 2}
+        m_Texture: {fileID: 8900000, guid: 44bb9b0e62280394d81a42e09d71314f, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Cubemap_A8949E1B:
-        m_Texture: {fileID: 8900000, guid: 5dc5a445e2aca0c4c979183f5279e464, type: 2}
+        m_Texture: {fileID: 8900000, guid: 66fefeca331373d4b81ffde7e06d6852, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Cubemap_B3793A2C:
