@@ -73,6 +73,8 @@ namespace ThirdPersonPlayerShooter
                 isDead = true;
                 _armRig.weight = 0;
 
+                Player.enemyKills++;
+
                 characterAnimator.SetBool("isDead", true);
 
                 foreach (SkinnedMeshRenderer a_smr in GetComponentsInChildren<SkinnedMeshRenderer>())

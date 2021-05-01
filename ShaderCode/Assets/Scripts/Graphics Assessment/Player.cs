@@ -11,6 +11,7 @@ namespace ThirdPersonPlayerShooter
     public class Player : MonoBehaviour
     {
         public static Player main;
+        public static int enemyKills = 0;
 
         #region EditorDataOrganisers (structs)
         [System.Serializable]
@@ -61,6 +62,9 @@ namespace ThirdPersonPlayerShooter
         [Space()]
         [Header("UI")]
         public UnityEngine.UI.Slider _healthBar;
+        public UnityEngine.UI.Text _killText;
+        public GameObject _deathScreen;
+        public UnityEngine.UI.Text _deathScreenText;
 
         [Space()]
         [Header("Ghost Setup")]
@@ -124,6 +128,7 @@ namespace ThirdPersonPlayerShooter
         void Start()
         {
             main = this;
+            enemyKills = 0;
 
             characterController = GetComponent<CharacterController>();
             characterAnimator = GetComponent<Animator>();
@@ -332,12 +337,20 @@ namespace ThirdPersonPlayerShooter
             if (health < 0)
             {
                 isDead = true;
+
+                Cursor.lockState = CursorLockMode.Confined;
+
+                _deathScreen.SetActive(true);
+                _deathScreenText.text = string.Format(_deathScreenText.text, enemyKills);
+                characterAnimator.SetBool("isDead", true);
             }
         }
 
         // Used for physics movement to keep it exact regardless of computer specs.
         private void FixedUpdate()
         {
+            if (isDead) return;
+
             if (Cursor.lockState != CursorLockMode.Confined)
             {
                 Move(true);
@@ -348,7 +361,10 @@ namespace ThirdPersonPlayerShooter
         // Update is called once per frame
         private void Update()
         {
+            if (isDead) return;
+
             _healthBar.value = Mathf.Lerp(_healthBar.value, health, Time.deltaTime * 2f); // Should be the only way to lerp healthbars.
+            _killText.text = $"Enemies Killed: {enemyKills}";
 
             if (Cursor.lockState != CursorLockMode.Confined)
             {
